@@ -1,0 +1,35 @@
+.tooltip {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(8, 10, 18, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 10px 14px;
+  backdrop-filter: blur(12px);
+  z-index: 10;
+  min-width: 150px;
+}
+
+.title {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.row {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.value {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.coords {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.25);
+  margin-top: 6px;
+  font-family: "DM Mono", monospace;
+}

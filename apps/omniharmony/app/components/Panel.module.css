@@ -1,0 +1,44 @@
+.panel {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.panelAccent {
+  composes: panel;
+  background: rgba(0, 200, 255, 0.02);
+}
+
+.header {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.headerHint {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.2);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.body {
+  padding: 10px 8px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.bodyCompact {
+  padding: 8px 4px;
+  max-height: 230px;
+  overflow-y: auto;
+}

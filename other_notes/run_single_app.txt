@@ -1,0 +1,26 @@
+# Main showcase page
+cd ~/Desktop/projects/loguebio/apps/landing && npm run dev
+
+# Cancer Pathway Visualizer
+cd ~/Desktop/projects/loguebio/apps/cancer-pathway-visualizer && npm run dev
+
+# ChromaLoop Simulator
+cd ~/Desktop/projects/loguebio/apps/chromaloop-sim && npm run dev
+
+# Condensate Lab
+cd ~/Desktop/projects/loguebio/apps/condensate-lab && npm run dev
+
+# FoldFlow Dynamics
+cd ~/Desktop/projects/loguebio/apps/foldflow-dynamics && npm run dev
+
+# MAGFlow (MagShiny)
+cd ~/Desktop/projects/loguebio/apps/MAGFlow && npm run dev
+
+# OmniHarmony
+cd ~/Desktop/projects/loguebio/apps/omniharmony && npm run dev
+
+# Pangenome Voyager
+cd ~/Desktop/projects/loguebio/apps/pangenome-voyager && npm run dev
+
+# Waddington Landscape Explorer
+cd ~/Desktop/projects/loguebio/apps/waddington-landscape-explorer && npm run dev

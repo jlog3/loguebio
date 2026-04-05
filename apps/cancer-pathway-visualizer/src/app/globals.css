@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --gene-cyan: #22d3ee;
+  --gene-rose: #fb7185;
+  --gene-emerald: #34d399;
+  --gene-amber: #fbbf24;
+  --surface: #030712;
+  --surface-raised: #0a0f1a;
+  --surface-overlay: #0d1117;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  font-family: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
+  background: linear-gradient(145deg, #030712 0%, #0a0f1a 40%, #0c1220 100%);
+  color: rgba(255, 255, 255, 0.88);
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(34, 211, 238, 0.3);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Recharts overrides */
+.recharts-tooltip-cursor {
+  stroke: rgba(255, 255, 255, 0.06);
+}
+
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: rgba(255, 255, 255, 0.025);
+}
+
+@layer utilities {
+  .text-w05 { color: rgba(255, 255, 255, 0.05); }
+  .text-w10 { color: rgba(255, 255, 255, 0.10); }
+  .text-w15 { color: rgba(255, 255, 255, 0.15); }
+  .text-w25 { color: rgba(255, 255, 255, 0.25); }
+  .text-w40 { color: rgba(255, 255, 255, 0.40); }
+  .bg-w02 { background: rgba(255, 255, 255, 0.02); }
+  .bg-w05 { background: rgba(255, 255, 255, 0.05); }
+  .border-w05 { border-color: rgba(255, 255, 255, 0.05); }
+  .border-w10 { border-color: rgba(255, 255, 255, 0.10); }
+}

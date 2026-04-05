@@ -1,0 +1,271 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --nucleus-bg: #030711;
+  --panel-bg: rgba(10, 17, 40, 0.85);
+  --panel-border: rgba(0, 229, 255, 0.12);
+  --cyan: #00e5ff;
+  --magenta: #ff00e5;
+  --green: #39ff14;
+  --amber: #ffab00;
+  --red: #ff1744;
+  --text-primary: #e8eaf6;
+  --text-secondary: #7986cb;
+  --text-dim: #3f51b5;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  background: var(--nucleus-bg);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 229, 255, 0.2);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 229, 255, 0.4);
+}
+
+/* Glass panel */
+.glass-panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 12px;
+}
+
+.glass-panel-strong {
+  background: rgba(10, 17, 40, 0.95);
+  border: 1px solid rgba(0, 229, 255, 0.18);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-radius: 12px;
+}
+
+/* Glow effects */
+.glow-cyan {
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.15), inset 0 0 15px rgba(0, 229, 255, 0.05);
+}
+
+.glow-magenta {
+  box-shadow: 0 0 15px rgba(255, 0, 229, 0.15), inset 0 0 15px rgba(255, 0, 229, 0.05);
+}
+
+.glow-text-cyan {
+  text-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+}
+
+.glow-text-magenta {
+  text-shadow: 0 0 20px rgba(255, 0, 229, 0.5);
+}
+
+/* Slider styling */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(0, 229, 255, 0.15);
+  outline: none;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--cyan);
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+  transition: transform 0.15s ease;
+}
+
+input[type='range']::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--cyan);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+}
+
+/* Toggle switch */
+.toggle-track {
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: background 0.3s ease;
+  position: relative;
+}
+
+.toggle-track.active {
+  background: rgba(0, 229, 255, 0.3);
+}
+
+.toggle-knob {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #555;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: all 0.3s ease;
+}
+
+.toggle-track.active .toggle-knob {
+  left: 18px;
+  background: var(--cyan);
+  box-shadow: 0 0 6px rgba(0, 229, 255, 0.6);
+}
+
+/* Pulsing dot */
+@keyframes bead-pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.bead-pulse {
+  animation: bead-pulse 2s ease-in-out infinite;
+}
+
+/* Gradient mesh background */
+.bg-mesh {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(0, 229, 255, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(255, 0, 229, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(57, 255, 20, 0.02) 0%, transparent 50%),
+    var(--nucleus-bg);
+}
+
+/* Disease card animation */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+  20%, 40%, 60%, 80% { transform: translateX(2px); }
+}
+
+.shake-anim {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Canvas container */
+.canvas-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.canvas-container canvas {
+  display: block;
+}
+
+/* Gene expression bar */
+.expression-bar {
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  z-index: 100;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(10, 17, 40, 0.95);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* Navigation bar */
+.nav-bar {
+  background: rgba(3, 7, 17, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.08);
+}
+
+/* Learn page prose */
+.learn-prose {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14.5px;
+  line-height: 1.85;
+  color: var(--text-secondary);
+}
+
+.learn-prose p {
+  margin-bottom: 1.25em;
+}
+
+.learn-prose p:last-child {
+  margin-bottom: 0;
+}
+
+.learn-prose strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.learn-prose em {
+  color: var(--cyan);
+  font-style: italic;
+}
+
+.learn-prose a {
+  color: var(--cyan);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.3);
+  transition: border-color 0.2s ease;
+}
+
+.learn-prose a:hover {
+  border-bottom-color: var(--cyan);
+}
+
+/* Learn page scroll */
+.learn-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 229, 255, 0.15) transparent;
+}
+
+/* Smooth page transitions */
+.page-transition {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Keyboard shortcuts kbd styling */
+kbd {
+  font-family: 'JetBrains Mono', monospace;
+}

@@ -1,0 +1,12 @@
+you should run npm install again.
+Since you’re replacing all the files in the directory, the new package.json (and possibly package-lock.json) might be different from what was there before. Running npm install makes sure everything matches the new files.
+Do this (exact commands):
+
+# 1. Go into the app folder
+cd ~/Desktop/projects/loguebio/apps/chromaloop-sim
+
+# 2. Clean up old dependencies (safest)
+rm -rf node_modules package-lock.json
+
+# 3. Install fresh
+npm install

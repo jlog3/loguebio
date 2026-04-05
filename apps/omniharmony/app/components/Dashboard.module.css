@@ -1,0 +1,247 @@
+.wrapper {
+  padding: 16px;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Background ambient glows */
+.glowCyan {
+  position: fixed;
+  top: 20%;
+  left: 30%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(
+    circle,
+    rgba(0, 100, 200, 0.04) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glowPink {
+  position: fixed;
+  bottom: 10%;
+  right: 20%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 100, 200, 0.03) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Header */
+.headerRow {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #00c8ff, #ff64c8, #64ffaa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.badge {
+  font-size: 9px;
+  background: rgba(0, 200, 255, 0.1);
+  color: #00c8ff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.subtitle {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 500;
+}
+
+.metaRight {
+  margin-left: auto;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* Layer control bar */
+.layerBar {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.layerLabel {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.35);
+  font-weight: 600;
+}
+
+.divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+/* Main grid */
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 12px;
+  align-items: start;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 960px) {
+  .mainGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* UMAP wrapper for canvas + overlay tooltip */
+.umapWrapper {
+  padding: 4px;
+  position: relative;
+}
+
+/* Factor row: network + detail side-by-side */
+.factorRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 960px) {
+  .factorRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tab bar */
+.tabBar {
+  display: flex;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tab {
+  flex: 1;
+  padding: 8px 0;
+  font-size: 10px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-family: inherit;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.3);
+  border-bottom: 2px solid transparent;
+}
+
+.tabActive {
+  composes: tab;
+  background: rgba(0, 200, 255, 0.08);
+  color: #00c8ff;
+  border-bottom-color: #00c8ff;
+}
+
+/* Stats rows */
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.statRow:last-child {
+  border-bottom: none;
+}
+
+.statLabel {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.statValue {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+  font-family: "DM Mono", monospace;
+}
+
+/* XAI section */
+.xaiText {
+  padding: 10px 14px;
+  font-size: 10px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.xaiText p {
+  margin: 0 0 6px;
+}
+
+.xaiText p:last-child {
+  margin-bottom: 0;
+}
+
+.xaiStrong {
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 600;
+}
+
+.xaiHeader {
+  color: rgba(0, 200, 255, 0.6);
+}
+
+/* Footer */
+.footer {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.15);
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+}
