@@ -1,6 +1,19 @@
 @import "tailwindcss";
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
 
+
+@theme {
+  --color-gene-cyan: #22d3ee;
+  --color-gene-rose: #fb7185;
+  --color-gene-emerald: #34d399;
+  --color-gene-amber: #fbbf24;
+  --color-surface: #030712;
+  --color-surface-raised: #0a0f1a;
+  --color-surface-overlay: #0d1117;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+}
+
 :root {
   --gene-cyan: #22d3ee;
   --gene-rose: #fb7185;
