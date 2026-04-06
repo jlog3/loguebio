@@ -63,14 +63,12 @@ body {
   stroke: rgba(255, 255, 255, 0.025);
 }
 
-@layer utilities {
-  .text-w05 { color: rgba(255, 255, 255, 0.05); }
-  .text-w10 { color: rgba(255, 255, 255, 0.10); }
-  .text-w15 { color: rgba(255, 255, 255, 0.15); }
-  .text-w25 { color: rgba(255, 255, 255, 0.25); }
-  .text-w40 { color: rgba(255, 255, 255, 0.40); }
-  .bg-w02 { background: rgba(255, 255, 255, 0.02); }
-  .bg-w05 { background: rgba(255, 255, 255, 0.05); }
-  .border-w05 { border-color: rgba(255, 255, 255, 0.05); }
-  .border-w10 { border-color: rgba(255, 255, 255, 0.10); }
-}
+@utility text-w05 { color: rgba(255, 255, 255, 0.05); }
+@utility text-w10 { color: rgba(255, 255, 255, 0.10); }
+@utility text-w15 { color: rgba(255, 255, 255, 0.15); }
+@utility text-w25 { color: rgba(255, 255, 255, 0.25); }
+@utility text-w40 { color: rgba(255, 255, 255, 0.40); }
+@utility bg-w02 { background: rgba(255, 255, 255, 0.02); }
+@utility bg-w05 { background: rgba(255, 255, 255, 0.05); }
+@utility border-w05 { border-color: rgba(255, 255, 255, 0.05); }
+@utility border-w10 { border-color: rgba(255, 255, 255, 0.10); }
