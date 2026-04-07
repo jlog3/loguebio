@@ -1,8 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap");
+@import "tailwindcss";
 
 :root {
   --void-950: #030810;
@@ -16,6 +13,21 @@
   --green-glow: #7cff6b;
   --gold-glow: #ffb340;
   --purple-glow: #c792ea;
+}
+
+@theme {
+  --color-void-950: #030810;
+  --color-void-900: #060d17;
+  --color-void-800: #0a1525;
+  --color-void-700: #0a1f35;
+  --color-void-600: #0e2a47;
+  --color-void-500: #1e3a5f;
+  --color-cyan-glow: #00e5ff;
+  --color-pink-glow: #ff6ec7;
+  --color-green-glow: #7cff6b;
+  --color-gold-glow: #ffb340;
+  --color-purple-glow: #c792ea;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
 }
 
 * {
