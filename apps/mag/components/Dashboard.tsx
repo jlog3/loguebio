@@ -337,7 +337,7 @@ function TaxonomyMatrix({ data, toast }) {
     const taxa = [...new Set(data.map(r => r.Taxonomy_Level))].filter(Boolean).sort();
     const ps = new Set(data.map(r => `${r.Sample_ID}|${r.Taxonomy_Level}`));
     const matrix = taxa.map(t => ({taxon:t,...Object.fromEntries(samples.map(s => [s,ps.has(`${s}|${t}`)?1:0]))}));
-    const flat = matrix.map(row => [row.taxon, ...samples.map(s => row[s])].join("\t"));
+    const flat = matrix.map(row => [row.taxon, ...samples.map(s => row[s as string])].join("\t"));
     return { samples, matrix, flat: ["Taxon\t"+samples.join("\t"), ...flat].join("\n") };
   },[data]);
   return (
