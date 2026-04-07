@@ -282,8 +282,8 @@ function ColorLegend({ data, colorBy }) {
   return (
     <div className="flex flex-wrap gap-x-4 gap-y-1 justify-center mt-3">
       {keys.map(v => (
-        <div key={v} className="flex items-center gap-1.5 text-[10px] text-gray-500">
-          <div className="w-2 h-2 rounded-full" style={{backgroundColor:gc(v)}} />{v}
+        <div key={String(v)} className="flex items-center gap-1.5 text-[10px] text-gray-500">
+          <div className="w-2 h-2 rounded-full" style={{backgroundColor:gc(v)}} />{String(v)}
         </div>
       ))}
     </div>
