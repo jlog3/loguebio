@@ -4,12 +4,14 @@
   "private": true,
   "description": "Interactive MAG quality assessment dashboard — Next.js rewrite",
   "scripts": {
-    "dev": "next dev",
+    "check-types": "tsc --noEmit",
+    "dev": "next dev -p 3007",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@repo/suite": "*",
     "next": "^15.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

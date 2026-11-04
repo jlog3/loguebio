@@ -1,0 +1,43 @@
+{
+  "stamp": "20261103-100656",
+  "created": [
+    "apps/cancer-pathway-visualizer/src/app/icon.svg",
+    "apps/cancer-pathway-visualizer/src/app/favicon.ico",
+    "apps/cancer-pathway-visualizer/src/app/apple-icon.png",
+    "apps/chromaloop-simulator/src/app/icon.svg",
+    "apps/chromaloop-simulator/src/app/favicon.ico",
+    "apps/chromaloop-simulator/src/app/apple-icon.png",
+    "apps/condensate-lab/app/icon.svg",
+    "apps/condensate-lab/app/apple-icon.png",
+    "apps/foldflow-dynamics/app/icon.svg",
+    "apps/foldflow-dynamics/app/apple-icon.png",
+    "apps/landing/app/icon.svg",
+    "apps/landing/app/favicon.ico",
+    "apps/landing/app/apple-icon.png",
+    "apps/mag/app/icon.svg",
+    "apps/mag/app/favicon.ico",
+    "apps/mag/app/apple-icon.png",
+    "apps/omniharmony/app/icon.svg",
+    "apps/omniharmony/app/favicon.ico",
+    "apps/omniharmony/app/apple-icon.png",
+    "apps/pangenome-voyager/app/icon.svg",
+    "apps/pangenome-voyager/app/favicon.ico",
+    "apps/pangenome-voyager/app/apple-icon.png",
+    "apps/waddington-landscape-explorer/app/icon.svg",
+    "apps/waddington-landscape-explorer/app/apple-icon.png"
+  ],
+  "replaced": [
+    "apps/condensate-lab/app/favicon.ico",
+    "apps/foldflow-dynamics/app/favicon.ico",
+    "apps/waddington-landscape-explorer/app/favicon.ico",
+    "turbo.json",
+    "apps/cancer-pathway-visualizer/package.json",
+    "apps/chromaloop-simulator/package.json",
+    "apps/condensate-lab/package.json",
+    "apps/foldflow-dynamics/package.json",
+    "apps/mag/package.json",
+    "apps/omniharmony/package.json",
+    "apps/waddington-landscape-explorer/package.json"
+  ],
+  "set_aside": []
+}

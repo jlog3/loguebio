@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SuiteNav } from "@repo/suite";
 
 export const metadata: Metadata = {
   title: "MAGShiny — MAG Quality Dashboard",
@@ -13,14 +14,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning lang="en">
       <head>
         <link
           href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;600&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className="bg-gray-50 text-gray-900 font-sans">{children}</body>
+      <body className="bg-gray-50 text-gray-900 font-sans"><SuiteNav theme="light" />{children}</body>
     </html>
   );
 }

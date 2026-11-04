@@ -1,4 +1,5 @@
 import "./globals.css";
+import { SuiteNav } from "@repo/suite";
 
 export const metadata = {
   title: "Pangenome Voyager – Graph-Based Genome Navigator",
@@ -8,8 +9,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className="bg-void-radial">{children}</body>
+    <html suppressHydrationWarning lang="en">
+      <body className="bg-void-radial"><SuiteNav />{children}</body>
     </html>
   );
 }

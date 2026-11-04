@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
+import { toolUrl } from '@repo/suite';
 
 /* ═══════════════════════════════════════════════════════════════
    PROJECT DATA
@@ -372,8 +373,8 @@ function DNAHelix() {
     <svg viewBox="0 0 120 600" className="absolute right-[5%] top-0 h-full opacity-[0.07] pointer-events-none select-none" preserveAspectRatio="xMidYMid slice">
       {Array.from({ length: 50 }, (_, i) => {
         const y = i * 12;
-        const x1 = 60 + Math.sin(i * 0.35) * 40;
-        const x2 = 60 + Math.sin(i * 0.35 + Math.PI) * 40;
+        const x1 = Math.round((60 + Math.sin(i * 0.35) * 40) * 100) / 100;
+        const x2 = Math.round((60 + Math.sin(i * 0.35 + Math.PI) * 40) * 100) / 100;
         return (
           <g key={i}>
             <circle cx={x1} cy={y} r={3} fill="#00e5ff" />
@@ -386,59 +387,223 @@ function DNAHelix() {
   );
 }
 
-/* --- Screenshot carousel for a single project --- */
-function ScreenshotCarousel({ screenshots, color }: { screenshots: ProjectScreenshot[]; color: string }) {
+/* --- Preview media for a single project ---
+   Files live in apps/landing/public/previews/, named <slug>-<n>.<ext>, where <slug>
+   is the PROJECTS slug and <n> is the slide number (1, 2, 3 in `screenshots` order):
+     condensate-lab-1.webp   screenshot, 16:10 (1600x1000)
+     condensate-lab-1.mp4    optional silent clip; needs the .webp as its poster
+   previews.json in the same folder lists which files exist. make_preview.py
+   (repo root) converts a screenshot or recording and updates the list; after
+   copying files in by hand, run `python3 make_preview.py --scan`.
+   Slides without a screenshot are hidden. A project with none yet keeps the
+   placeholder cards. Clips never play by themselves: the screenshot shows until
+   the person presses Play, and a clip pauses when its card scrolls out of view. */
+const PREVIEW_DIR = '/previews';
+
+type SlideMedia = { image: boolean; video: boolean };
+
+let previewManifest: Promise<Set<string>> | null = null;
+
+function previewFiles(): Promise<Set<string>> {
+  if (!previewManifest) {
+    previewManifest = fetch(`${PREVIEW_DIR}/previews.json`, { cache: 'no-cache' })
+      .then((r) => (r.ok ? r.json() : { files: [] }))
+      .then((j: { files?: unknown }) =>
+        new Set(Array.isArray(j.files) ? j.files.filter((f): f is string => typeof f === 'string') : []),
+      )
+      .catch(() => new Set<string>());
+  }
+  return previewManifest;
+}
+
+function checkPreviewMedia(slug: string, count: number): Promise<SlideMedia[]> {
+  return previewFiles().then((files) =>
+    Array.from({ length: count }, (_, i) => {
+      const image = files.has(`${slug}-${i + 1}.webp`);
+      return { image, video: image && files.has(`${slug}-${i + 1}.mp4`) };
+    }),
+  );
+}
+
+function ScreenshotCarousel({ screenshots, color, slug, name }: {
+  screenshots: ProjectScreenshot[];
+  color: string;
+  slug: string;
+  name: string;
+}) {
+  const [media, setMedia] = useState<SlideMedia[] | null>(null);
   const [active, setActive] = useState(0);
-  const s = screenshots[active];
+  const [playing, setPlaying] = useState(false);
+  // Files previews.json lists but the server could not deliver.
+  const [broken, setBroken] = useState<Set<string>>(() => new Set());
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const boxRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    checkPreviewMedia(slug, screenshots.length).then((m) => {
+      if (!cancelled) setMedia(m);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, screenshots.length]);
+
+  // A clip the person started stops when its card leaves the screen.
+  useEffect(() => {
+    const box = boxRef.current;
+    if (!box || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) videoRef.current?.pause();
+      },
+      { threshold: 0.25 },
+    );
+    io.observe(box);
+    return () => io.disconnect();
+  }, []);
+
+  const fileBase = (i: number) => `${PREVIEW_DIR}/${slug}-${i + 1}`;
+  const withImage = screenshots.map((_, i) => i)
+    .filter((i) => media?.[i]?.image && !broken.has(`${fileBase(i)}.webp`));
+  const placeholderMode = withImage.length === 0;
+  const slides = placeholderMode ? screenshots.map((_, i) => i) : withImage;
+  const current = slides.includes(active) ? active : slides[0];
+  const s = screenshots[current];
+  const base = fileBase(current);
+  const hasVideo = !placeholderMode && Boolean(media?.[current]?.video) && !broken.has(`${base}.mp4`);
+  const markBroken = (url: string) => setBroken((prev) => (prev.has(url) ? prev : new Set(prev).add(url)));
+  const captionId = `preview-caption-${slug}`;
+  const description = `${s.features.join(', ')}.`;
+
+  const select = useCallback((i: number) => {
+    videoRef.current?.pause();
+    setPlaying(false);
+    setActive(i);
+  }, []);
+
+  const togglePlay = useCallback(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) {
+      v.play().catch(() => setPlaying(false));
+    } else {
+      v.pause();
+    }
+  }, []);
 
   return (
-    <div className="space-y-3">
-      {/* Placeholder "screenshot" */}
+    <figure className="space-y-2" aria-labelledby={captionId}>
       <div
-        className="relative rounded-xl overflow-hidden border border-white/[0.06] aspect-[16/10] flex items-center justify-center transition-all duration-500"
-        style={{ background: s.gradient }}
+        ref={boxRef}
+        className="relative rounded-xl overflow-hidden border border-white/[0.06] aspect-[16/10] flex items-center justify-center"
+        style={placeholderMode ? { background: s.gradient } : { background: '#02040a' }}
       >
-        {/* Placeholder icon & grid */}
-        <div className="absolute inset-0 opacity-[0.04]" style={{
-          backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
-          backgroundSize: '20px 20px',
-        }} />
-        <div className="relative text-center z-10 px-6">
-          <span className="text-4xl block mb-3 opacity-60">{s.icon}</span>
-          <p className="font-display text-xs tracking-widest uppercase opacity-40" style={{ color }}>
-            {s.caption}
-          </p>
-          <div className="mt-4 flex flex-wrap justify-center gap-2">
-            {s.features.map((f) => (
-              <span key={f} className="font-mono text-[9px] px-2 py-1 rounded-full border border-white/[0.08] text-white/40 bg-white/[0.02]">
-                {f}
-              </span>
-            ))}
-          </div>
-          {/* Replace this with actual screenshot */}
-          <p className="font-mono text-[8px] text-white/20 mt-4">[ screenshot placeholder ]</p>
-        </div>
+        {placeholderMode ? (
+          <>
+            <div className="absolute inset-0 opacity-[0.04]" style={{
+              backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
+              backgroundSize: '20px 20px',
+            }} />
+            <div className="relative text-center z-10 px-6">
+              <span className="text-4xl block mb-3 opacity-60" aria-hidden="true">{s.icon}</span>
+              <p className="font-display text-xs tracking-widest uppercase opacity-40" style={{ color }} aria-hidden="true">
+                {s.caption}
+              </p>
+              <ul className="mt-4 flex flex-wrap justify-center gap-2" aria-label="Shows">
+                {s.features.map((f) => (
+                  <li key={f} className="font-mono text-[9px] px-2 py-1 rounded-full border border-white/[0.08] text-white/40 bg-white/[0.02]">
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <p className="font-mono text-[8px] text-white/20 mt-4">[ screenshot placeholder ]</p>
+            </div>
+          </>
+        ) : hasVideo ? (
+          <>
+            <video
+              key={base}
+              ref={videoRef}
+              className="absolute inset-0 w-full h-full object-cover"
+              poster={`${base}.webp`}
+              preload="none"
+              muted
+              playsInline
+              loop
+              aria-label={`Silent preview clip of ${name}: ${description}`}
+              onPlay={() => setPlaying(true)}
+              onPause={() => setPlaying(false)}
+            >
+              <source src={`${base}.mp4`} type="video/mp4" onError={() => markBroken(`${base}.mp4`)} />
+            </video>
+            <button
+              type="button"
+              onClick={togglePlay}
+              aria-label={playing ? `Pause clip: ${name} preview` : `Play clip: ${name} preview, silent`}
+              className="absolute bottom-3 right-3 z-10 inline-flex items-center gap-2 min-h-11 px-4 rounded-full font-mono text-[11px] text-white bg-black/75 border focus-visible:outline-2 focus-visible:outline-offset-2"
+              style={{ borderColor: `${color}80`, outlineColor: color }}
+            >
+              <span aria-hidden="true">{playing ? '❚❚' : '▶'}</span>
+              {playing ? 'Pause' : 'Play clip'}
+            </button>
+          </>
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            key={base}
+            src={`${base}.webp`}
+            alt={`Screenshot of ${name}: ${description}`}
+            width={1600}
+            height={1000}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 w-full h-full object-cover"
+            onError={() => markBroken(`${base}.webp`)}
+          />
+        )}
       </div>
 
-      {/* Carousel dots */}
-      {screenshots.length > 1 && (
-        <div className="flex items-center justify-center gap-2">
-          {screenshots.map((_, i) => (
+      <figcaption
+        id={captionId}
+        aria-live="polite"
+        className={placeholderMode
+          ? 'sr-only'
+          : 'flex items-baseline justify-between gap-3 font-mono text-[10px] text-white/55'}
+      >
+        <span>{s.caption}</span>
+        {slides.length > 1 && (
+          <span className="text-white/35 shrink-0">
+            {slides.indexOf(current) + 1} of {slides.length}
+          </span>
+        )}
+      </figcaption>
+
+      {slides.length > 1 && (
+        <div role="group" aria-label={`${name} previews`} className="flex items-center justify-center">
+          {slides.map((i, pos) => (
             <button
               key={i}
-              onClick={() => setActive(i)}
-              className="transition-all duration-300"
-              style={{
-                width: i === active ? 20 : 6,
-                height: 6,
-                borderRadius: 3,
-                backgroundColor: i === active ? color : 'rgba(255,255,255,0.12)',
-              }}
-            />
+              type="button"
+              onClick={() => select(i)}
+              aria-label={`Preview ${pos + 1} of ${slides.length}: ${screenshots[i].caption}`}
+              aria-current={i === current ? 'true' : undefined}
+              className="flex items-center justify-center min-w-11 min-h-11 rounded-lg focus-visible:outline-2 focus-visible:-outline-offset-4"
+              style={{ outlineColor: color }}
+            >
+              <span
+                aria-hidden="true"
+                className="block h-1.5 rounded-full motion-safe:transition-all motion-safe:duration-300"
+                style={{
+                  width: i === current ? 20 : 6,
+                  backgroundColor: i === current ? color : 'rgba(255,255,255,0.4)',
+                }}
+              />
+            </button>
           ))}
         </div>
       )}
-    </div>
+    </figure>
   );
 }
 
@@ -496,7 +661,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           </p>
 
           {/* Screenshot carousel */}
-          <ScreenshotCarousel screenshots={project.screenshots} color={project.color} />
+          <ScreenshotCarousel screenshots={project.screenshots} color={project.color} slug={project.slug} name={project.name} />
 
           {/* Features */}
           <button
@@ -524,9 +689,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
           {/* CTA */}
           <a
-            href={`https://${project.slug}.loguebio.com`}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={toolUrl(project.slug)}
             className="mt-4 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl font-mono text-[11px] transition-all duration-300 border"
             style={{
               backgroundColor: `${project.color}08`,
@@ -557,7 +720,7 @@ function PlatformFeature({ icon, title, description, color, delay }: {
   return (
     <div className="glass-card rounded-xl p-5 animate-slideUp" style={{ animationDelay: `${delay}s` }}>
       <span className="text-xl block mb-3" style={{ color }}>{icon}</span>
-      <h4 className="font-display text-[12px] tracking-wide text-white mb-1.5">{title}</h4>
+      <h3 className="font-display text-[12px] tracking-wide text-white mb-1.5">{title}</h3>
       <p className="font-body text-[11px] text-white/35 leading-relaxed">{description}</p>
     </div>
   );
@@ -583,6 +746,12 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen landing-page">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:inline-flex focus:items-center focus:min-h-11 focus:px-4 focus:rounded-lg focus:bg-[#030711] focus:text-white focus:border focus:border-[#00e5ff] font-mono text-[12px]"
+      >
+        Skip to content
+      </a>
 
       {/* ── Floating nav ── */}
       <nav className="fixed top-0 left-0 right-0 z-50 landing-nav">
@@ -611,7 +780,7 @@ export default function LandingPage() {
               Platform
             </a>
             <a
-              href="https://github.com/loguebio"
+              href="https://github.com/jlog3/loguebio"
               target="_blank"
               rel="noopener noreferrer"
               className="font-mono text-[10px] px-3 py-1.5 rounded-lg border border-white/[0.08] text-white/40 hover:text-white/70 hover:border-white/20 transition-all"
@@ -622,6 +791,7 @@ export default function LandingPage() {
         </div>
       </nav>
 
+      <main id="main-content" tabIndex={-1} className="outline-none">
       {/* ── Hero ── */}
       <section className="relative min-h-[85vh] flex items-center overflow-hidden">
         <DNAHelix />
@@ -633,7 +803,7 @@ export default function LandingPage() {
           <div className="absolute bottom-[10%] left-[30%] w-[300px] h-[300px] rounded-full bg-[#39ff14]/[0.008] blur-[70px]" style={{ transform: `translateY(${scrollY * 0.04}px)` }} />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-6 pt-24">
+        <div className="relative w-full max-w-7xl mx-auto px-6 pt-24">
           <div className="max-w-3xl">
             {/* Chip */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/[0.06] bg-white/[0.02] mb-8 animate-slideUp">
@@ -663,7 +833,7 @@ export default function LandingPage() {
                 Explore Projects ↓
               </a>
               <a
-                href="https://github.com/loguebio"
+                href="https://github.com/jlog3/loguebio"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-mono text-[12px] px-6 py-3 rounded-xl bg-white/[0.03] text-white/50 border border-white/[0.08] hover:bg-white/[0.06] hover:text-white/70 transition-all"
@@ -691,7 +861,7 @@ export default function LandingPage() {
 
       {/* ── Category disciplines banner ── */}
       <section className="border-y border-white/[0.04] py-6 overflow-hidden">
-        <div className="flex items-center gap-8 justify-center flex-wrap px-6">
+        <div className="flex items-center gap-x-3 gap-y-2 sm:gap-8 justify-center flex-wrap px-6">
           {CATEGORIES.map((cat) => {
             const proj = PROJECTS.find((p) => p.category === cat)!;
             return (
@@ -838,6 +1008,8 @@ export default function LandingPage() {
         </div>
       </section>
 
+      </main>
+
       {/* ── Footer ── */}
       <footer className="border-t border-white/[0.04] py-12">
         <div className="max-w-7xl mx-auto px-6">
@@ -853,7 +1025,7 @@ export default function LandingPage() {
             </div>
 
             <div className="flex items-center gap-6">
-              <a href="https://github.com/loguebio" target="_blank" rel="noopener noreferrer" className="font-mono text-[10px] text-white/25 hover:text-white/50 transition-colors">
+              <a href="https://github.com/jlog3/loguebio" target="_blank" rel="noopener noreferrer" className="font-mono text-[10px] text-white/25 hover:text-white/50 transition-colors">
                 GitHub
               </a>
               <span className="font-mono text-[10px] text-white/15">·</span>

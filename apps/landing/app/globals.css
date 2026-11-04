@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
+@import "tailwindcss";
 
 :root {
   --nucleus-bg: #030711;
@@ -13,12 +13,6 @@
   --text-primary: #e8eaf6;
   --text-secondary: #7986cb;
   --text-dim: #3f51b5;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
 }
 
 html {

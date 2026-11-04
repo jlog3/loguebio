@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SuiteNav } from "@repo/suite";
 
 export const metadata: Metadata = {
   title: "OmniHarmony — Multi-Omics Integration Dashboard",
@@ -13,8 +14,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html suppressHydrationWarning lang="en">
+      <body><SuiteNav />{children}</body>
     </html>
   );
 }

@@ -3,12 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "check-types": "tsc --noEmit",
+    "dev": "next dev -p 3006",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "three": "^0.170.0",
+    "d3": "^7.9.0",
+    "recharts": "^2.13.3",
+    "@repo/suite": "*",
     "next": "16.2.2",
     "react": "19.2.4",
     "react-dom": "19.2.4"

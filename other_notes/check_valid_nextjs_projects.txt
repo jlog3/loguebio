@@ -1,1 +1,0 @@
-~/Desktop/projects/loguebio$ find apps -name package.json ! -path '*/node_modules/*' | sort

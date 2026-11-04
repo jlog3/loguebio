@@ -1,159 +1,134 @@
-# Turborepo starter
+# LogueBio
 
-This Turborepo starter is maintained by the Turborepo core team.
+Interactive, browser-based biology tools: simulators, 3D explorers and analysis
+dashboards for genomics, proteomics, metagenomics and developmental biology.
+Built for researchers, students and the curious.
 
-## Using this example
+**Repository:** https://github.com/jlog3/loguebio
 
-Run the following command:
+The goal is that anyone, expert or beginner, disabled or not, can explore these
+systems, understand what they show and use the results in their own work. That
+is a design rule for every feature, and work in progress across the apps.
 
-```sh
-npx create-turbo@latest
+Everything runs in the browser. There are no accounts, and data you upload stays
+on your device.
+
+## The tools
+
+| Tool | Folder | What it does | Dev port |
+|---|---|---|---|
+| **Landing page** | `apps/landing` | The directory of every tool, with descriptions and previews | **3002** |
+| Cancer Pathway Visualizer | `apps/cancer-pathway-visualizer` | Differential expression from RNA-seq counts: volcano and MA plots, heatmaps, KEGG pathways, methods text | 3003 |
+| ChromaLoop | `apps/chromaloop-simulator` | 3D chromatin folding: loop extrusion, CTCF boundaries, TADs, a live Hi-C contact map, disease presets | 3004 |
+| Condensate Lab | `apps/condensate-lab` | Phase separation of biomolecular condensates, FRAP, liquid-to-solid disease aggregation | 3005 |
+| FoldFlow Dynamics | `apps/foldflow-dynamics` | Protein structure ensembles in 3D, attention maps, residue mutation and stability | 3006 |
+| MAG Dashboard | `apps/mag` | Quality of metagenome-assembled genomes: MIMAG tiers, completeness vs contamination, statistics | 3007 |
+| OmniHarmony | `apps/omniharmony` | Multi-omics integration: factor network, UMAP, cross-layer correlations, what-if analysis | 3008 |
+| Pangenome Voyager | `apps/pangenome-voyager` | Pangenome graphs as tube maps, haplotype paths, graph vs linear reference, mutation simulator | 3009 |
+| Waddington Explorer | `apps/waddington-landscape-explorer` | Cell-fate landscapes in 3D, RNA velocity on UMAP, gene perturbation, story mode | 3010 |
+
+Some apps have their own README with more detail:
+[ChromaLoop](apps/chromaloop-simulator/README.md),
+[Cancer Pathway Visualizer](apps/cancer-pathway-visualizer/README.md),
+[MAG Dashboard](apps/mag/README.md),
+[Pangenome Voyager](apps/pangenome-voyager/README.md).
+
+The simulations are simplified teaching models, not predictions, and bundled
+example datasets are examples, not findings.
+
+## Getting started
+
+Requires Node.js 20 or newer and npm 10.
+
+```bash
+git clone https://github.com/jlog3/loguebio.git
+cd loguebio
+npm install
+npm run dev
 ```
 
-## What's inside?
+Then open **http://localhost:3002**. Every tool starts on its own port (table
+above), and the landing page's Launch buttons point at those ports while you are
+running in development.
 
-This Turborepo includes the following packages/apps:
+### Run only some apps
 
-### Apps and Packages
+Starting all nine takes a while. To start a subset, filter by package name:
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+```bash
+npx turbo run dev --filter=landing --filter=condensate-lab
 ```
 
-Without global `turbo`, use your package manager:
+Package names match the folder names. A Launch button for an app you did not
+start will not connect.
 
-```sh
-cd my-turborepo
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+One app on its own:
+
+```bash
+npm run dev -w apps/condensate-lab
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+### "Address already in use"
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+A port in the table is taken, usually by a dev server that is still running.
+Stop servers with **Ctrl+C** in the terminal that started them (closing the
+window does not always stop them). To find and stop leftovers:
 
-```sh
-turbo build --filter=docs
+```bash
+ss -ltnp 'sport >= :3002 and sport <= :3010'
+pkill -f "next dev"; pkill -f next-server
 ```
 
-Without global `turbo`:
+## Other commands
 
-```sh
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+Run from the repo root:
+
+```bash
+npm run build     # production build of every app
+npm run lint      # lint every app
+npm run format    # Prettier on .ts, .tsx and .md files
 ```
 
-### Develop
+## Landing page previews
 
-To develop all apps and packages, run the following command:
+Each card on the landing page can show screenshots and short silent clips. They
+live in `apps/landing/public/previews/`, listed in `previews.json`. Use
+`make_preview.py` (repo root; needs `ffmpeg`) to add them. It resizes and
+compresses the file, names it and updates the list:
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
+```bash
+python3 make_preview.py --list                           # every slot and its caption
+python3 make_preview.py shot.png condensate-lab 1        # screenshot -> 1600x1000 WebP
+python3 make_preview.py recording.webm condensate-lab 1  # clip -> 1280x800 MP4, silent, max 10 s
+python3 make_preview.py --scan                           # after copying files in by hand
 ```
 
-Without global `turbo`, use your package manager:
+For a screenshot that is already the right shape, use your browser's responsive
+mode at 1600 × 1000. Clips never play on their own; visitors press Play.
 
-```sh
-cd my-turborepo
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+## Repository layout
+
+```
+apps/                 one Next.js app per tool, plus the landing page
+packages/
+  ui/                 shared React components (@repo/ui)
+  eslint-config/      shared ESLint config (@repo/eslint-config)
+  typescript-config/  shared tsconfig (@repo/typescript-config)
+  suite/              tool list, ports, URLs and the "All tools" link (@repo/suite)
+make_preview.py       landing page preview helper
+turbo.json            Turborepo task pipeline
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+The apps differ in structure (some use `src/app`, some `app/`; some TypeScript,
+some JavaScript; some Tailwind, some CSS modules), so check before assuming.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+## Deployment
 
-```sh
-turbo dev --filter=web
-```
+Not live yet. The plan is one deployment per app: the landing page at
+`loguebio.com` and each tool at `<slug>.loguebio.com` (for example
+`condensate-lab.loguebio.com`). In a production build the landing page's Launch
+buttons already point at those addresses.
 
-Without global `turbo`:
+## License
 
-```sh
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+MIT.

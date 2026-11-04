@@ -1,0 +1,11 @@
+{
+  "stamp": "20261103-110235",
+  "created": [
+    "apps/foldflow-dynamics/components/FoldFlow.jsx",
+    "apps/foldflow-dynamics/app/page.tsx"
+  ],
+  "edited": [
+    "apps/foldflow-dynamics/app/layout.tsx",
+    "apps/foldflow-dynamics/package.json"
+  ]
+}

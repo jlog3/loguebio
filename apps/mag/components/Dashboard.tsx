@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect, type ReactNode } from "react";
+import type { MAGRecord } from "@/lib/types";
 import * as Papa from "papaparse";
 import {
   ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -229,7 +230,7 @@ function ChartCard({ title, subtitle, children, chartId, toast, className="" }) 
 /* ═══════════════════════════════════════════════════════════════════════════════
    REUSABLE COMPONENTS
    ═══════════════════════════════════════════════════════════════════════════════ */
-function StatCard({ label, value, sub, color }) {
+function StatCard({ label, value, sub, color }: { label: string; value: ReactNode; sub?: string; color?: string }) {
   return (
     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex-1 min-w-[120px]">
       <div className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1">{label}</div>
@@ -239,7 +240,7 @@ function StatCard({ label, value, sub, color }) {
   );
 }
 
-function ChartTooltip({ active, payload }) {
+function ChartTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload: Record<string, unknown> }> }) {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   return (
@@ -254,7 +255,9 @@ function ChartTooltip({ active, payload }) {
   );
 }
 
-function FilterPills({ label, items, selected, onChange, colorFn }) {
+function FilterPills({ label, items, selected, onChange, colorFn }: {
+  label: string; items: string[]; selected: string[]; onChange: (next: string[]) => void; colorFn?: (item: string) => string;
+}) {
   const allOn = selected.length === items.length;
   return (
     <div className="flex items-center gap-1.5 flex-wrap">
@@ -333,8 +336,8 @@ function BoxplotViz({ data, dataKey, groupKey="Sample_ID" }) {
    ═══════════════════════════════════════════════════════════════════════════════ */
 function TaxonomyMatrix({ data, toast }) {
   const { samples, matrix, flat } = useMemo(() => {
-    const samples = [...new Set(data.map(r => r.Sample_ID))].sort();
-    const taxa = [...new Set(data.map(r => r.Taxonomy_Level))].filter(Boolean).sort();
+    const samples: string[] = [...new Set<string>(data.map(r => r.Sample_ID))].sort();
+    const taxa: string[] = [...new Set<string>(data.map(r => r.Taxonomy_Level))].filter(Boolean).sort();
     const ps = new Set(data.map(r => `${r.Sample_ID}|${r.Taxonomy_Level}`));
     const matrix = taxa.map(t => ({taxon:t,...Object.fromEntries(samples.map(s => [s,ps.has(`${s}|${t}`)?1:0]))}));
     const flat = matrix.map(row => [row.taxon, ...samples.map(s => row[s as string])].join("\t"));
@@ -546,7 +549,7 @@ export default function MAGDashboard() {
   const [selectedTaxa, setSelectedTaxa] = useState([]);
   const [fileName, setFileName] = useState(null);
   const [exportMenu, setExportMenu] = useState(false);
-  const fileRef = useRef();
+  const fileRef = useRef<HTMLInputElement>(null);
   const { show: toast, Toasts } = useToast();
 
   useEffect(() => {
@@ -561,7 +564,7 @@ export default function MAGDashboard() {
 
   const parseData = useCallback((text, name) => {
     const sep = text.includes("\t") ? "\t" : ",";
-    const result = Papa.parse(text.trim(), {header:true,delimiter:sep,dynamicTyping:true,skipEmptyLines:true});
+    const result = Papa.parse<MAGRecord>(text.trim(), {header:true,delimiter:sep,dynamicTyping:true,skipEmptyLines:true});
     if(result.data?.length) {
       setRawData(result.data);
       setFileName(name||"data");
@@ -578,8 +581,8 @@ export default function MAGDashboard() {
     reader.readAsText(file);
   },[parseData]);
 
-  const allSamples = useMemo(() => rawData ? [...new Set(rawData.map(r=>r.Sample_ID))].sort() : [], [rawData]);
-  const allTaxa = useMemo(() => rawData ? [...new Set(rawData.map(r=>r.Taxonomy_Level))].filter(Boolean).sort() : [], [rawData]);
+  const allSamples = useMemo<string[]>(() => rawData ? [...new Set<string>(rawData.map(r=>r.Sample_ID))].sort() : [], [rawData]);
+  const allTaxa = useMemo<string[]>(() => rawData ? [...new Set<string>(rawData.map(r=>r.Taxonomy_Level))].filter(Boolean).sort() : [], [rawData]);
 
   const processed = useMemo(() => {
     if(!rawData) return null;
