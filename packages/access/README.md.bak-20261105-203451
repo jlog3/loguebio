@@ -1,0 +1,39 @@
+# @repo/access
+
+One place for what every LogueBio tool needs to adapt to the person using it:
+
+- **Settings** (`useAccess`, `updateSettings`, `AccessSettingsPanel`): colour scheme,
+  contrast, colour-blind palette, text size and spacing, motion, autoplay, simpler
+  interface, reading time, explanations, sound and vibration. Saved in a cookie that
+  every tool shares (localhost ports share cookies in development; `.loguebio.com`
+  in production), with a localStorage copy. Nothing leaves the device.
+- **What the person declares wins**: `resolveSettings` only falls back to the
+  device's own settings (reduced motion, dark mode) when the choice is "Follow my device".
+- **Palette** (`categoryColors`, `cividis`): Okabe-Ito categories, a blue-yellow
+  (tritan) set and a high-contrast set, in one fixed order; cividis for scales.
+  Always pair colour with a shape or a word.
+- **Announcer** (`announce`): hidden live regions; drops repeats, merges polite
+  messages by `topic`, and spaces them out (`setAnnounceGap`, longer with
+  "longer reading time").
+- **Vibration** (`canVibrate`, `vibrate`): only when turned on and supported.
+
+```tsx
+// app/layout.tsx: apply saved settings before first paint
+import { ACCESS_BOOT_SCRIPT } from '@repo/access/boot';   // server-safe entry
+<head><script dangerouslySetInnerHTML={{ __html: ACCESS_BOOT_SCRIPT }} /></head>
+
+// any client component
+'use client';
+import { useAccess, applySettingsToDocument, AccessSettingsPanel, announce } from '@repo/access';
+const access = useAccess();
+useEffect(() => applySettingsToDocument(access), [access]);
+announce('3 droplets formed', { topic: 'droplets' });
+```
+
+The `<html>` element then carries `data-theme`, `data-contrast`, `data-motion`,
+`data-spacing`, `data-palette`, `data-simpler` and `data-text-size` (100, 125,
+150, 200), and `--access-text-scale` for CSS. Screen-width media queries ignore
+the text size, so use `data-text-size` to drop columns when text is large.
+
+Plain JavaScript with type declarations, like `@repo/suite`, so it needs no build
+step and no `transpilePackages`.

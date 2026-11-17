@@ -1,0 +1,16 @@
+{
+  "name": "@repo/kit",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Accessible charts, tables, tabs, dialogs and sound shared by every LogueBio tool",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./kit.css": "./kit.css"
+  },
+  "sideEffects": ["*.css"],
+  "peerDependencies": {
+    "react": ">=18",
+    "@repo/access": "*"
+  }
+}

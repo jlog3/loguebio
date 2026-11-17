@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Condensate Lab
 
-## Getting Started
+Watch proteins and RNA gather into droplets (liquid-liquid phase separation), the
+way cells build compartments without walls. Change stickiness, temperature,
+concentration, pH and crowding; bleach a droplet to test whether it is liquid
+(FRAP); turn on disease mode to watch droplets harden; find the threshold where
+droplets start; compare with textbook Flory-Huggins theory or your own FRAP data.
 
-First, run the development server:
+A simplified 2D teaching model with arbitrary units. The app lists what it leaves
+out under "About this model".
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev -w apps/condensate-lab      # from the repo root
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Layout
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+app/            page, layout (applies saved settings before first paint), styles
+components/     CondensateLab (composition), SimCanvas, Controls, Playback, Status,
+                Panels (Droplets, Over time, FRAP, Threshold, Theory, Log), Guide,
+                Dialogs
+lib/sim/        engine (Brownian dynamics, clusters, hardening, bleaching), params,
+                frap (fit, CSV import), floryHuggins, rng
+lib/store.ts    the one state model every view reads and every control writes
+lib/describe.ts the text versions of the picture (summary, announcements, alt text)
+lib/export.ts   CSV, JSON and SVG exports, each labelled as simulated data
+lib/content.ts  presets, guide, glossary, model limits
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Settings (theme, contrast, palette, text size, motion, autoplay, simpler interface,
+reading time, sound, vibration) and the colour tokens come from the shared
+`@repo/access` package, so they carry across every LogueBio tool. Charts, tables,
+tabs, dialogs and sound come from `@repo/kit`, shared with the other tools.
 
-## Learn More
+## Every route reaches the same result
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Picture:** shapes as well as colours (protein circles, RNA triangles, solid
+  squares, bleached hollow), numbered droplet outlines.
+- **Text:** a live summary under the picture, a sortable droplets table, a log of
+  every change, and a table under each chart.
+- **Keyboard:** in the picture, arrows move between droplets, B bleaches, Space
+  plays or pauses; in charts, arrows read each point.
+- **Screen readers:** throttled spoken updates (they can be turned off), droplets
+  announced with size, contents, state and position.
+- **Sound and touch (optional):** tones for changes, a tone whose pitch follows
+  the share of protein in droplets, vibration where the device supports it.
+- **Motion:** nothing starts by itself unless the settings allow it; pause, step,
+  jump ahead, speed, and "picture updates once a second / only when paused".

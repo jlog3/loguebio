@@ -1,0 +1,160 @@
+/*
+* @repo/access tokens: colours for every theme and contrast mode, plus the
+* base rules every LogueBio tool shares (text size and spacing, reduced motion,
+* focus ring, visually hidden text, skip link). Apps import this once:
+*   import "@repo/access/tokens.css";
+* The data attributes come from applySettingsToDocument / ACCESS_BOOT_SCRIPT.
+* Every text/background pair meets WCAG AA (4.5:1); high contrast meets AAA.
+*/
+
+:root {
+  --bg: #f4f2ec;
+  --surface: #fffdf8;
+  --canvas: #fbfaf7;
+  --ink: #1a1d21;
+  --muted: #4b5563;
+  --line: #c9c5b9;
+  --grid: #e5e3dc;
+  --accent: #0b5fa5;
+  --accent-ink: #ffffff;
+  --focus: #b45309;
+  --note-bg: #eef4fb;
+  --note-line: #9bbbe0;
+  --status-neutral: #4b5563;
+  --status-caution: #8a5a00;
+  --status-strong: #0b5fa5;
+  --radius: 10px;
+  --border-w: 1px;
+  --background: var(--bg);
+  --foreground: var(--ink);
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #111418;
+  --surface: #1a1f25;
+  --canvas: #0d1013;
+  --ink: #eceff3;
+  --muted: #b3bcc8;
+  --line: #3b4450;
+  --grid: #222831;
+  --accent: #7cc0ff;
+  --accent-ink: #0b1622;
+  --focus: #ffb454;
+  --note-bg: #16263a;
+  --note-line: #33557c;
+  --status-neutral: #b3bcc8;
+  --status-caution: #f2c14e;
+  --status-strong: #7cc0ff;
+  color-scheme: dark;
+}
+
+:root[data-contrast="high"] {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --canvas: #ffffff;
+  --ink: #000000;
+  --muted: #1f1f1f;
+  --line: #000000;
+  --grid: #b0b0b0;
+  --accent: #0033cc;
+  --accent-ink: #ffffff;
+  --focus: #b30000;
+  --note-bg: #ffffff;
+  --note-line: #000000;
+  --status-neutral: #000000;
+  --status-caution: #6b3b00;
+  --status-strong: #0033cc;
+  --border-w: 2px;
+}
+
+:root[data-contrast="high"][data-theme="dark"] {
+  --bg: #000000;
+  --surface: #000000;
+  --canvas: #000000;
+  --ink: #ffffff;
+  --muted: #f0f0f0;
+  --line: #ffffff;
+  --grid: #555555;
+  --accent: #66ccff;
+  --accent-ink: #000000;
+  --focus: #ffd400;
+  --note-bg: #000000;
+  --note-line: #ffffff;
+  --status-neutral: #ffffff;
+  --status-caution: #ffd400;
+  --status-strong: #66ccff;
+}
+
+html {
+  font-size: calc(100% * var(--access-text-scale, 1));
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  line-height: 1.55;
+}
+
+:root[data-spacing="wide"] body {
+  letter-spacing: 0.06em;
+  word-spacing: 0.16em;
+  line-height: 1.9;
+}
+:root[data-spacing="wide"] p {
+  margin-bottom: 1.2em;
+}
+
+:root[data-motion="reduce"] *,
+:root[data-motion="reduce"] *::before,
+:root[data-motion="reduce"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+*:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -100px;
+  z-index: 100;
+  padding: 10px 16px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-radius: 8px;
+  font-weight: 650;
+}
+.skip-link:focus {
+  top: 12px;
+}
+
+.muted {
+  color: var(--muted);
+}
+.mono {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+.label {
+  font-weight: 650;
+  margin-right: 0.35em;
+}

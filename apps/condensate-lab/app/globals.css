@@ -1,9 +1,6 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Condensate Lab layout. Colours and shared controls come from @repo/access/tokens.css and @repo/kit/kit.css (imported in layout.tsx). */
 
 @theme inline {
   --color-background: var(--background);
@@ -12,15 +9,227 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ─── Layout ─────────────────────────────────────────────────────────────── */
+
+.app {
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 16px 16px 96px;
+}
+
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 8px 0 16px;
+  border-bottom: var(--border-w) solid var(--line);
+  margin-bottom: 16px;
+}
+.brand h1 {
+  font-size: 1.9rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+.tagline {
+  color: var(--muted);
+  max-width: 60ch;
+}
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.layout {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "stage" "controls" "results";
+}
+.stage {
+  grid-area: stage;
+}
+.controls {
+  grid-area: controls;
+}
+.results {
+  grid-area: results;
+}
+
+@media (min-width: 960px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr);
+    grid-template-areas: "stage controls" "results results";
+    align-items: start;
+  }
+}
+@media (min-width: 1680px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.75fr) minmax(480px, 1fr);
+    grid-template-areas: "stage controls results";
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Large text: fewer, wider columns (width breakpoints don't see the text size) */
+:root[data-text-size="125"] .layout {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "stage" "controls" "results";
+}
+@media (min-width: 1280px) {
+  :root[data-text-size="125"] .layout {
+    grid-template-columns: minmax(0, 1.6fr) minmax(320px, 1fr);
+    grid-template-areas: "stage controls" "results results";
+  }
+}
+:root[data-text-size="150"] .layout,
+:root[data-text-size="200"] .layout {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "stage" "controls" "results";
+}
+
+.panel {
+  background: var(--surface);
+  border: var(--border-w) solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  min-width: 0;
+}
+.panel h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.panel h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 16px 0 6px;
+}
+.panel p {
+  margin-bottom: 0.6em;
+}
+.about {
+  margin-top: 16px;
+}
+.about ul {
+  list-style: disc;
+  padding-left: 1.4em;
+  margin-bottom: 10px;
+}
+.about li {
+  margin-bottom: 4px;
+}
+
+/* ─── Simulation picture ─────────────────────────────────────────────────── */
+
+.figure-wrap {
+  border: var(--border-w) solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--canvas);
+}
+.sim-canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+.sim-canvas:focus-visible {
+  outline-offset: -3px;
+}
+
+
+/* ─── Playback and status ────────────────────────────────────────────────── */
+
+.playback {
+  margin: 10px 0;
+}
+.playback-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-bottom: 8px;
+}
+.playback-row:first-child {
+  gap: 8px;
+}
+.play {
+  min-width: 104px;
+}
+.time {
+  font-weight: 600;
+  margin: 0 !important;
+}
+.time-unit {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.status {
+  border-top: var(--border-w) solid var(--line);
+  padding-top: 10px;
+  margin-top: 6px;
+}
+.status-phase {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+.status-stats {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 2px solid currentColor;
+  font-weight: 700;
+}
+.badge-glyph {
+  letter-spacing: -0.1em;
+}
+.phase-mixed {
+  color: var(--status-neutral);
+}
+.phase-borderline {
+  color: var(--status-caution);
+}
+.phase-separated {
+  color: var(--status-strong);
+}
+.status-text {
+  font-size: 1.02rem;
+}
+.status-latest {
+  font-size: 0.95rem;
+}
+
+.selection {
+  border-top: var(--border-w) solid var(--line);
+  margin-top: 10px;
+  padding-top: 4px;
+}
+
+
+@media print {
+  .header-actions,
+  .playback,
+  .button-row,
+  .skip-link {
+    display: none !important;
+  }
+  .panel {
+    break-inside: avoid;
+  }
 }

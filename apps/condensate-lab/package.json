@@ -13,7 +13,9 @@
     "@repo/suite": "*",
     "next": "16.2.2",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "@repo/access": "*",
+    "@repo/kit": "*"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

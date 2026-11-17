@@ -1,0 +1,23 @@
+{
+  "name": "@repo/access",
+  "version": "0.0.0",
+  "private": true,
+  "description": "One settings source, palette and screen-reader announcer for every LogueBio tool",
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./boot": {
+      "types": "./boot.d.ts",
+      "default": "./boot.js"
+    }
+  },
+  "sideEffects": false,
+  "peerDependencies": {
+    "react": ">=18"
+  }
+}

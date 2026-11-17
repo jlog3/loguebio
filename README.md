@@ -115,6 +115,8 @@ packages/
   eslint-config/      shared ESLint config (@repo/eslint-config)
   typescript-config/  shared tsconfig (@repo/typescript-config)
   suite/              tool list, ports, URLs and the "All tools" link (@repo/suite)
+  access/             shared settings, palette and screen-reader announcer (@repo/access)
+  kit/                shared accessible charts, tables, tabs, dialogs and sound (@repo/kit)
 make_preview.py       landing page preview helper
 turbo.json            Turborepo task pipeline
 ```
